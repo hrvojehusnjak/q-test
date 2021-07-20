@@ -1,0 +1,10 @@
+<b *ngIf="headerText">{{ headerText }}</b>
+<custom-comment
+  *ngFor="let comment of availableComments"
+  [comment]="comment"
+></custom-comment>
+<div *ngIf="availableComments.length < allComments.length">
+  <button (click)="showMoreComments()" class="btn btn-link">
+    Show more comments
+  </button>
+</div>

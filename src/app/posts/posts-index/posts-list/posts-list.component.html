@@ -1,0 +1,38 @@
+<custom-loading *ngIf="isLoading" [isLoading]="isLoading"></custom-loading>
+<div *ngFor="let post of posts" class="post-container">
+  <custom-post class="card">
+    <custom-post-body class="card-body">
+      <custom-post-title>
+        <h3
+          [innerHTML]="post.title | highlightSearchTerms: searchWords"
+          class="card-title"
+        ></h3>
+      </custom-post-title>
+      <custom-post-subtitle>
+        <h4 class="card-subtitle text-muted">
+          {{ post.user?.name }}
+        </h4>
+      </custom-post-subtitle>
+      <div>
+        <p
+          [innerHTML]="post.body | highlightSearchTerms: searchWords"
+          class="card-text"
+        ></p>
+      </div>
+      <div>
+        <button
+          (click)="navigateToPost(post)"
+          type="button"
+          class="btn btn-link"
+        >
+          See post
+        </button>
+      </div>
+    </custom-post-body>
+  </custom-post>
+  <custom-comments-list
+    [limitNumber]="3"
+    [comments]="post.comments"
+    [headerText]="'Comments (' + post.comments.length + ')'"
+  ></custom-comments-list>
+</div>

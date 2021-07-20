@@ -1,0 +1,55 @@
+<div class="container container-custom">
+  <header>
+    <div class="row">
+      <div class="col">
+        <h3>Q Code Test</h3>
+      </div>
+    </div>
+  </header>
+  <div>
+    <div class="row">
+      <div class="col">
+        <div class="input-group">
+          <input
+            #search
+            type="text"
+            (keyup)="searchTerm$.next($event.target.value)"
+            placeholder="Search posts"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <section>
+          <app-posts-list
+            [posts]="posts$ | async"
+            [isLoading]="isLoading$ | async"
+            [searchTerm]="searchTerm$.getValue()"
+          ></app-posts-list>
+          <div *ngIf="!(isLoading$ | async)" class="actions">
+            <button
+              *ngIf="!(areAllPostsLoaded$ | async); else allPostsLoadedTemplate"
+              (click)="onLoadMorePosts()"
+              type="button"
+              class="btn btn-primary"
+            >
+              See more posts
+            </button>
+            <ng-template #allPostsLoadedTemplate>
+              <ng-container
+                *ngIf="(posts$ | async).length; else noPostsFoundTemplate"
+              >
+                <span class="all-posts-loaded">All posts loaded</span>
+              </ng-container>
+              <ng-template #noPostsFoundTemplate>
+                <span class="all-posts-loaded">No posts to show</span>
+              </ng-template>
+            </ng-template>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

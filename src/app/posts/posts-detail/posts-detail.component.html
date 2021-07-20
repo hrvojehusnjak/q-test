@@ -1,0 +1,24 @@
+<div class="container container-custom">
+  <custom-loading
+    *ngIf="isLoading$ | async"
+    [isLoading]="isLoading$ | async"
+  ></custom-loading>
+  <custom-post *ngIf="post">
+    <custom-post-body>
+      <custom-post-title>
+        <h1>{{ post.title }}</h1>
+      </custom-post-title>
+      <custom-post-subtitle>
+        <h2>{{ post.user?.name }}</h2>
+      </custom-post-subtitle>
+      <div>
+        <p>{{ post.body }}</p>
+      </div>
+    </custom-post-body>
+  </custom-post>
+  <custom-comments-list
+    *ngIf="post"
+    [comments]="post.comments"
+    [headerText]="'Comments (' + post.comments.length + ')'"
+  ></custom-comments-list>
+</div>

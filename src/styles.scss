@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+.container-custom {
+  max-width: 640px;
+}
+
+.highlight-search-text {
+  background-color: rgb(253, 255, 137);
+  padding: 0 2px;
+  border-radius: 2px;
+}
