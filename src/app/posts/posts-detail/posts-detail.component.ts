@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
-import { combineLatest, forkJoin, Observable } from 'rxjs'
-import { map } from 'rxjs/operators'
+import { combineLatest, forkJoin, Observable, Subject } from 'rxjs'
+import { map, takeUntil } from 'rxjs/operators'
 import { PostsService } from 'src/core/services/post.service'
 import { UsersService } from 'src/core/services/user.service'
 import { PostExtended, User } from 'src/core/models/models'
@@ -15,6 +15,8 @@ export class PostsDetailComponent implements OnInit {
   public post: PostExtended
   public isLoading$: Observable<boolean>
 
+  private readonly _destroy = new Subject<boolean>()
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -27,12 +29,14 @@ export class PostsDetailComponent implements OnInit {
       forkJoin([
         this.usersService.getUsers(),
         this.postsService.getPostById(postId)
-      ]).subscribe(([users, post]) => {
-        this.post = {
-          ...post,
-          user: users.find((user) => user.id === post.userId) as User
-        }
-      })
+      ])
+        .pipe(takeUntil(this._destroy))
+        .subscribe(([users, post]) => {
+          this.post = {
+            ...post,
+            user: users.find((user) => user.id === post.userId) as User
+          }
+        })
     }
     this.isLoading$ = combineLatest([
       this.postsService.isLoading$,
@@ -46,4 +50,9 @@ export class PostsDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this._destroy.next()
+    this._destroy.complete()
+  }
 }

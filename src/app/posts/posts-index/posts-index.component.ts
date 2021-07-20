@@ -43,10 +43,9 @@ export class PostsIndexComponent implements AfterViewInit, OnDestroy {
     public postsService: PostsService,
     private usersService: UsersService
   ) {
-    forkJoin([
-      this.usersService.getUsers(),
-      this.postsService.getPosts()
-    ]).subscribe()
+    forkJoin([this.usersService.getUsers(), this.postsService.getPosts()])
+      .pipe(takeUntil(this._destroy))
+      .subscribe()
 
     this.isLoading$ = combineLatest([
       this.postsService.isLoading$,
@@ -93,6 +92,9 @@ export class PostsIndexComponent implements AfterViewInit, OnDestroy {
   }
 
   onLoadMorePosts(): void {
-    this.postsService.getPosts({}, true).subscribe()
+    this.postsService
+      .getPosts({}, true)
+      .pipe(takeUntil(this._destroy))
+      .subscribe()
   }
 }
